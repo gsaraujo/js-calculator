@@ -2,6 +2,9 @@ class CalcController {
 
     constructor(){
 
+
+        this._audio = new Audio('click.mp3');//audio web api. Not a JS native class.
+        this._audioOnOff = false;
         this._lastOperator = '';
         this._lastNumber = '';
         this._operation = [];
@@ -36,11 +39,11 @@ class CalcController {
 
         input.select();
         
-        //document.execCommand('Copy');//deprecated - on the class this method is still used. 
+        //document.execCommand('Copy');//deprecated - on the lecture this method is still used. 
         
 
         if (!navigator.clipboard){
-            document.execCommand('Copy');//deprecated - on the class this method is still used. 
+            document.execCommand('Copy');//deprecated - on the lecture this method is still used. 
         } else {
             navigator.clipboard.writeText(input.value);
         }
@@ -62,10 +65,45 @@ class CalcController {
         this.setLastNumberToDisplay();
         this.pastFromClipboard();
 
+        document.querySelectorAll('.btn-ac').forEach(btn=>{
+
+            btn.addEventListener('dblclick', e=>{
+
+                this.toggleAudio();
+
+            });
+        });
+
+    }
+
+    toggleAudio() {
+
+
+        this._audioOnOff = !this._audioOnOff;
+
+        /*this._audioOnOff = (this._audioOnOff) ? false : true;
+
+        if (this._audioOnOff) {
+            this._audioOnOff = false;
+        } else {
+            this._audioOnOff = true;
+        }*/
+
+    }
+
+    playAudio() {
+        if (this._audioOnOff) {
+
+            this._audio.currentTime = 0;
+            this._audio.play();
+
+        }
     }
 
     initKeyboard() {
         document.addEventListener('keyup', e=>{
+
+            this.playAudio();
             
             switch (e.key) {
 
@@ -325,6 +363,8 @@ class CalcController {
     }
 
     execBtn(value){
+
+        this.playAudio();
 
         switch (value) {
 
